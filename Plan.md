@@ -37,10 +37,10 @@ Derive the equations of motion correctly before building the rest of the softwar
 
 ## Tasks
 
-- [DONE] Define the generalized coordinates
-- [DONE] Construct the Lagrangian
-- [DONE] Apply the Euler-Lagrange equations
-- [DONE] Solve explicitly Theta_double_dot for both coordinates
+- [x] Define the generalized coordinates
+- [x] Construct the Lagrangian
+- [x] Apply the Euler-Lagrange equations
+- [x] Solve explicitly Theta_double_dot for both coordinates
 - [ ] Convert the equations into four first-order ODEs
 
 
@@ -52,7 +52,7 @@ Implement a minimal working numerical simulation.
 
 ## Tasks
 
-- [ ] Create a function for the equations of motion
+- [x] Create a function for the equations of motion
 
 - [ ] Implement RK4 manually
 - [ ] Create a simulation loop
