@@ -56,9 +56,9 @@ Implement a minimal working numerical simulation.
 
 - [x] Implement RK4 manually
 - [x] Create a simulation loop
-- [ ] Store the full state history
-- [ ] Plot Theta1
-- [ ] Plot Theta2
+- [x] Store the full state history
+- [x] Plot Theta1
+- [x] Plot Theta2
 - [ ] Plot angular velocities
 
 # Phase 3 — Validation
