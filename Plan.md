@@ -41,7 +41,7 @@ Derive the equations of motion correctly before building the rest of the softwar
 - [x] Construct the Lagrangian
 - [x] Apply the Euler-Lagrange equations
 - [x] Solve explicitly Theta_double_dot for both coordinates
-- [ ] Convert the equations into four first-order ODEs
+- [x] Convert the equations into four first-order ODEs
 
 
 # Phase 2 — Core Simulation
@@ -54,8 +54,8 @@ Implement a minimal working numerical simulation.
 
 - [x] Create a function for the equations of motion
 
-- [ ] Implement RK4 manually
-- [ ] Create a simulation loop
+- [x] Implement RK4 manually
+- [x] Create a simulation loop
 - [ ] Store the full state history
 - [ ] Plot Theta1
 - [ ] Plot Theta2
