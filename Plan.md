@@ -97,10 +97,10 @@ Create a clear real-time animation.
 
 ## Tasks
 
-- [ ] Convert angular coordinates to Cartesian coordinates
-- [ ] Draw both rods
+- [x] Convert angular coordinates to Cartesian coordinates
+- [x] Draw both rods
 - [ ] Draw both masses
-- [ ] Animate using Matplotlib
+- [x] Animate using Matplotlib
 - [ ] Display simulation time
 - [ ] Add a trace for the second mass
 - [ ] Add pause/reset controls
