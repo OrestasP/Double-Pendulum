@@ -53,13 +53,11 @@ Implement a minimal working numerical simulation.
 ## Tasks
 
 - [x] Create a function for the equations of motion
-
 - [x] Implement RK4 manually
 - [x] Create a simulation loop
 - [x] Store the full state history
 - [x] Plot Theta1
 - [x] Plot Theta2
-- [ ] Plot angular velocities
 
 # Phase 3 — Validation
 
@@ -69,8 +67,8 @@ Verify that the simulation is numerically and physically credible.
 
 ## Energy Conservation
 
-- [ ] Create kinetic, potential, total energy functions
-- [ ] Make sure the total energy remains approximately constant.
+- [x] Create kinetic, potential, total energy functions
+- [x] Make sure the total energy remains approximately constant.
 - [ ] Plot a relative energy error.
 
 ## Timestep Experiment

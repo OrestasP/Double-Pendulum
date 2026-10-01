@@ -74,6 +74,10 @@ def main():
 
     xresult2 = [0.0] * nsteps
     yresult2 = [0.0] * nsteps
+    
+    Total_Energy_List = []
+    Kinetic_Energy_List = []
+    Potetial_Energy_List = []
 
     for i in range(nsteps):
         
@@ -105,6 +109,12 @@ def main():
 
         xresult2[i] = xresult1[i] + rod_length2 * np.sin(y1[2])
         yresult2[i] = yresult1[i] - rod_length2 * np.cos(y1[2])
+
+        Total_Energy_List.append(Total_Energy(y1[0], y1[2], y1[1], y1[3]))
+        Kinetic_Energy_List.append(Kinetic_Energy(y1[0], y1[2], y1[1], y1[3]))
+        Potetial_Energy_List.append(Potential_Energy(y1[0], y1[2]))
+
+
 
         # Shows the what time is being calculated
         if i % 1000 == 0:
@@ -142,6 +152,21 @@ def main():
         return line,
 
     anim = animation.FuncAnimation(fig, animate, init_func = init, frames = nsteps // skip, interval = 1000 / fps , blit = True)
+    plt.show()
+    
+    # anim.save('ThePendulum1.mp4', writer = 'ffmpeg', fps = 60)
+    
+    
+    fig_energy = plt.figure()
+    time = np.arange(len(Total_Energy_List)) * h
+    plt.plot(time, Total_Energy_List, label = "Total Energy", color = "green")
+    plt.plot(time, Kinetic_Energy_List, label = "Kinetic Energy", color = "blue")
+    plt.plot(time, Potetial_Energy_List, label = "Potential Energy", color = "red")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Energy (J)")
+    plt.title("Energy vs Time")
+    plt.grid(True)
+    plt.legend()
     plt.show()
 
     print(f"Angle1 = {y1[0]}\nAngular Velocity 1 = {y1[1]}\nAngle2 = {y1[2]}\nAngular Velocity 2 = {y1[3]}")

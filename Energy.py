@@ -1,8 +1,4 @@
-from Parameters import (
-    mass1, mass2,
-    rod_length1, rod_length2,
-    GRAVITATIONAL_ACCELERATION
-)
+from Parameters import mass1, mass2, rod_length1, rod_length2, GRAVITATIONAL_ACCELERATION
 import numpy as np
 
 def Kinetic_Energy(angle1, angle2, angular_velocity1, angular_velocity2):
