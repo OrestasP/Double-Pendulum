@@ -2,7 +2,8 @@ import __main__
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from Energy import Potential_Energy, Kinetic_Energy, Total_Energy
+from Energy import potential_energy, kinetic_energy, total_energy
+from Equations import angular_acceleration1, angular_acceleration2
 from Parameters import mass1, mass2, rod_length1, rod_length2, GRAVITATIONAL_ACCELERATION
 
 
@@ -11,112 +12,68 @@ theta1 = 0.0
 omega1 = 1.0
 theta2 = 0.3
 omega2 = 1.0
+initial_energy = total_energy(theta1, theta2, omega1, omega2)
 
 def main():
-    def angular_acceleration1(angle1, angle2, angular_velocity1, angular_velocity2):
-        return (
-        (
-            -GRAVITATIONAL_ACCELERATION * (2 * mass1 + mass2) * np.sin(angle1)
-            - mass2 * GRAVITATIONAL_ACCELERATION * np.sin(angle1 - 2 * angle2)
-            - 2 * mass2 * np.sin(angle1 - angle2)
-            * (
-                rod_length2 * np.pow(angular_velocity2, 2)
-                + rod_length1 * np.pow(angular_velocity1, 2)
-                * np.cos(angle1 - angle2)
-            )
-        )
-        /
-        (
-            rod_length1
-            * (
-                2 * mass1
-                + mass2
-                - mass2 * np.cos(2 * (angle1 - angle2))
-            )
-        )
-        )
-
-    def angular_acceleration2(angle1, angle2, angular_velocity1, angular_velocity2):
-        return (
-        (
-            2 * np.sin(angle1 - angle2)
-            * (
-                rod_length1 * np.pow(angular_velocity1, 2) * (mass1 + mass2)
-                + GRAVITATIONAL_ACCELERATION * (mass1 + mass2) * np.cos(angle1)
-                + rod_length2 * mass2 * np.pow(angular_velocity2, 2)
-                * np.cos(angle1 - angle2)
-            )
-        )
-        /
-        (
-            rod_length2
-            * (
-                2 * mass1
-                + mass2
-                - mass2 * np.cos(2 * (angle1 - angle2))
-            )
-        )
-        )
-
     # State vector
-    y1 = [theta1, omega1, theta2, omega2]
-    y_mid2 = [0.0] * len(y1)
-    y_mid3 = [0.0] * len(y1)
-    y_mid4 = [0.0] * len(y1)
+    state = [theta1, omega1, theta2, omega2]
+    
+    # Temporary states used to evaluate the intermediate RK4 stages.
+    state_mid2 = [0.0] * len(state)
+    state_mid3 = [0.0] * len(state)
+    state_mid4 = [0.0] * len(state)
+    
     nsteps = 1000000
-    h = 0.00001
-
-    angle1 = [0.0] * nsteps
-    angle2 = [0.0] * nsteps
-
+    h = 0.00001     # Integration time step (s)
+    
     xresult1 = [0.0] * nsteps
     yresult1 = [0.0] * nsteps
 
     xresult2 = [0.0] * nsteps
     yresult2 = [0.0] * nsteps
+        
+    total_energy_list = []
+    kinetic_energy_list = []
+    potential_energy_list = []
+    relative_energy_error = []
     
-    Total_Energy_List = []
-    Kinetic_Energy_List = []
-    Potetial_Energy_List = []
-
-    Relative_Energy_Error = []
 
     for i in range(nsteps):
         
         # RK4 stage 1: k1 = F(y_n)
-        k1 = [y1[1], angular_acceleration1(y1[0], y1[2], y1[1], y1[3]), y1[3], angular_acceleration2(y1[0], y1[2], y1[1], y1[3])]
-        for j in range(len(y1)):
-            y_mid2[j] = y1[j] + (h / 2) * k1[j]
+        k1 = [state[1], angular_acceleration1(state[0], state[2], state[1], state[3]), state[3], angular_acceleration2(state[0], state[2], state[1], state[3])]
+        for j in range(len(state)):
+            state_mid2[j] = state[j] + (h / 2) * k1[j]
         
         # RK4 stage 2: k2 = F(y_n + h*k1/2)
-        k2 = [y_mid2[1], angular_acceleration1(y_mid2[0], y_mid2[2], y_mid2[1], y_mid2[3]), y_mid2[3], angular_acceleration2(y_mid2[0], y_mid2[2], y_mid2[1], y_mid2[3])]
+        k2 = [state_mid2[1], angular_acceleration1(state_mid2[0], state_mid2[2], state_mid2[1], state_mid2[3]), state_mid2[3], angular_acceleration2(state_mid2[0], state_mid2[2], state_mid2[1], state_mid2[3])]
 
         # RK4 stage 3: k3 = F(y_n + h*k2/2)
-        for j in range(len(y1)):
-            y_mid3[j] = y1[j] + (h / 2) * k2[j]
-        k3 = [y_mid3[1], angular_acceleration1(y_mid3[0], y_mid3[2], y_mid3[1], y_mid3[3]), y_mid3[3], angular_acceleration2(y_mid3[0], y_mid3[2], y_mid3[1], y_mid3[3])]
+        for j in range(len(state)):
+            state_mid3[j] = state[j] + (h / 2) * k2[j]
+        k3 = [state_mid3[1], angular_acceleration1(state_mid3[0], state_mid3[2], state_mid3[1], state_mid3[3]), state_mid3[3], angular_acceleration2(state_mid3[0], state_mid3[2], state_mid3[1], state_mid3[3])]
 
         # RK4 stage 4: k4 = F(y_n + h*k3)
-        for j in range(len(y1)):
-            y_mid4[j] = y1[j] + h * k3[j]
-        k4 = [y_mid4[1], angular_acceleration1(y_mid4[0], y_mid4[2], y_mid4[1], y_mid4[3]), y_mid4[3], angular_acceleration2(y_mid4[0], y_mid4[2], y_mid4[1], y_mid4[3])]
+        for j in range(len(state)):
+            state_mid4[j] = state[j] + h * k3[j]
+        k4 = [state_mid4[1], angular_acceleration1(state_mid4[0], state_mid4[2], state_mid4[1], state_mid4[3]), state_mid4[3], angular_acceleration2(state_mid4[0], state_mid4[2], state_mid4[1], state_mid4[3])]
 
         # Advance state: y_(n+1) = y_n + h/6 * (k1 + 2k2 + 2k3 + k4)
-        for j in range(len(y1)):
-            y1[j] = y1[j] + (h / 6) * (k1[j] + 2 * k2[j] + 2 * k3[j] + k4[j])
+        for j in range(len(state)):
+            state[j] = state[j] + (h / 6) * (k1[j] + 2 * k2[j] + 2 * k3[j] + k4[j])
         
         # Saving the value of each angle at every step, and converting to cartesian coordinates
-        xresult1[i] = rod_length1 * np.sin(y1[0])
-        yresult1[i] = -rod_length1 * np.cos(y1[0])
+        xresult1[i] = rod_length1 * np.sin(state[0])
+        yresult1[i] = -rod_length1 * np.cos(state[0])
 
-        xresult2[i] = xresult1[i] + rod_length2 * np.sin(y1[2])
-        yresult2[i] = yresult1[i] - rod_length2 * np.cos(y1[2])
+        xresult2[i] = xresult1[i] + rod_length2 * np.sin(state[2])
+        yresult2[i] = yresult1[i] - rod_length2 * np.cos(state[2])
 
-        Total_Energy_List.append(Total_Energy(y1[0], y1[2], y1[1], y1[3]))
-        Kinetic_Energy_List.append(Kinetic_Energy(y1[0], y1[2], y1[1], y1[3]))
-        Potetial_Energy_List.append(Potential_Energy(y1[0], y1[2]))
+        total_energy_list.append(total_energy(state[0], state[2], state[1], state[3]))
+        kinetic_energy_list.append(kinetic_energy(state[0], state[2], state[1], state[3]))
+        potential_energy_list.append(potential_energy(state[0], state[2]))
 
-        Relative_Energy_Error.append((Total_Energy_List[i] - Total_Energy_List[0]) / abs(Total_Energy_List[0]))
+        relative_energy_error.append((total_energy_list[i] - initial_energy) / abs(initial_energy))
 
         # Shows the what time is being calculated
         if i % 1000 == 0:
@@ -125,7 +82,7 @@ def main():
         
 
 
-
+    # Plotting / animating the double pendulum
     fig = plt.figure()
 
     limit = rod_length1 + rod_length2
@@ -133,7 +90,7 @@ def main():
 
     axis.set_aspect('equal')
 
-    line, = axis.plot([], [], 'o-', lw = 2,)
+    line, = axis.plot([], [], 'o-', lw = 3, ms = 10, color = "black")
 
     fps = 60
     skip = int(1 / (fps * h))
@@ -156,14 +113,18 @@ def main():
     anim = animation.FuncAnimation(fig, animate, init_func = init, frames = nsteps // skip, interval = 1000 / fps , blit = True)
     plt.show()
     
+    # To save the animation as a video uncomment below
     # anim.save('ThePendulum1.mp4', writer = 'ffmpeg', fps = 60)
     
+    # Plotting Energy
+    plt.figure
     
-    fig_energy = plt.figure()
-    time = np.arange(len(Total_Energy_List)) * h
-    plt.plot(time, Total_Energy_List, label = "Total Energy", color = "green")
-    plt.plot(time, Kinetic_Energy_List, label = "Kinetic Energy", color = "blue")
-    plt.plot(time, Potetial_Energy_List, label = "Potential Energy", color = "red")
+    time = np.arange(len(total_energy_list)) * h
+    
+    plt.plot(time, total_energy_list, label = "Total Energy", color = "green")
+    plt.plot(time, kinetic_energy_list, label = "Kinetic Energy", color = "blue")
+    plt.plot(time, potential_energy_list, label = "Potential Energy", color = "red")
+    
     plt.xlabel("Time (s)")
     plt.ylabel("Energy (J)")
     plt.title("Energy vs Time")
@@ -171,22 +132,26 @@ def main():
     plt.legend()
     plt.show()
 
-    fig_energy_error = plt.figure()
-    plt.plot(time, Relative_Energy_Error, label = "Relative Energy Error", color = "purple")
+    # Plotting relative energy error
+    plt.figure()
+    
+    plt.plot(time, relative_energy_error, label = "Relative Energy Error", color = "purple")
+    
     plt.xlabel("Time (s)")
     plt.ylabel("Relative Energy Error")
     plt.title("Relative Energy error vs Time")
     plt.grid(True)
     plt.show()
 
-    print(f"Angle1 = {y1[0]}\nAngular Velocity 1 = {y1[1]}\nAngle2 = {y1[2]}\nAngular Velocity 2 = {y1[3]}")
+    # Outputs
+    print(f"Angle1 = {state[0]}\nAngular Velocity 1 = {state[1]}\nAngle2 = {state[2]}\nAngular Velocity 2 = {state[3]}")
     
-    max_error = np.max(np.abs(Relative_Energy_Error))
+    max_error = np.max(np.abs(relative_energy_error))
     print(f"Maximum relative energy error: {max_error:.6e}")
 
-    print(f"Initial energy: {Total_Energy_List[0]:.8e} J")
-    print(f"Minimum energy: {np.min(Total_Energy_List):.8e} J")
-    print(f"Maximum energy: {np.max(Total_Energy_List):.8e} J")
+    print(f"Initial energy: {total_energy_list[0]:.8e} J")
+    print(f"Minimum energy: {np.min(total_energy_list):.8e} J")
+    print(f"Maximum energy: {np.max(total_energy_list):.8e} J")
 
 
 
