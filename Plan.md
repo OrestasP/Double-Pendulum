@@ -69,7 +69,7 @@ Verify that the simulation is numerically and physically credible.
 
 - [x] Create kinetic, potential, total energy functions
 - [x] Make sure the total energy remains approximately constant.
-- [ ] Plot a relative energy error.
+- [x] Plot a relative energy error.
 
 ## Timestep Experiment
 
@@ -97,7 +97,7 @@ Create a clear real-time animation.
 
 - [x] Convert angular coordinates to Cartesian coordinates
 - [x] Draw both rods
-- [ ] Draw both masses
+- [x] Draw both masses
 - [x] Animate using Matplotlib
 - [ ] Display simulation time
 - [ ] Add a trace for the second mass

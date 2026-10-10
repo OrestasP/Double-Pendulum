@@ -79,6 +79,8 @@ def main():
     Kinetic_Energy_List = []
     Potetial_Energy_List = []
 
+    Relative_Energy_Error = []
+
     for i in range(nsteps):
         
         # RK4 stage 1: k1 = F(y_n)
@@ -114,12 +116,13 @@ def main():
         Kinetic_Energy_List.append(Kinetic_Energy(y1[0], y1[2], y1[1], y1[3]))
         Potetial_Energy_List.append(Potential_Energy(y1[0], y1[2]))
 
-
+        Relative_Energy_Error.append((Total_Energy_List[i] - Total_Energy_List[0]) / abs(Total_Energy_List[0]))
 
         # Shows the what time is being calculated
         if i % 1000 == 0:
             current_time = i * h
             print(f"Calculating t = {current_time:.2f} s")
+        
 
 
 
@@ -130,8 +133,7 @@ def main():
 
     axis.set_aspect('equal')
 
-
-    line, = axis.plot([], [], lw = 2)
+    line, = axis.plot([], [], 'o-', lw = 2,)
 
     fps = 60
     skip = int(1 / (fps * h))
@@ -169,7 +171,24 @@ def main():
     plt.legend()
     plt.show()
 
+    fig_energy_error = plt.figure()
+    plt.plot(time, Relative_Energy_Error, label = "Relative Energy Error", color = "purple")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Relative Energy Error")
+    plt.title("Relative Energy error vs Time")
+    plt.grid(True)
+    plt.show()
+
     print(f"Angle1 = {y1[0]}\nAngular Velocity 1 = {y1[1]}\nAngle2 = {y1[2]}\nAngular Velocity 2 = {y1[3]}")
+    
+    max_error = np.max(np.abs(Relative_Energy_Error))
+    print(f"Maximum relative energy error: {max_error:.6e}")
+
+    print(f"Initial energy: {Total_Energy_List[0]:.8e} J")
+    print(f"Minimum energy: {np.min(Total_Energy_List):.8e} J")
+    print(f"Maximum energy: {np.max(Total_Energy_List):.8e} J")
+
+
 
 if __name__ == "__main__":
     main()

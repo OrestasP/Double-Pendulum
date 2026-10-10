@@ -8,7 +8,7 @@ A Python simulation of a double pendulum using the equations of motion derived f
 - [x] Double pendulum equations of motion
 - [x] Numerical integration with RK4
 - [x] Trajectory plots
-- [ ] Energy conservation analysis
+- [x] Energy conservation analysis
 - [x] Animation
 - [ ] Chaos analysis
 
