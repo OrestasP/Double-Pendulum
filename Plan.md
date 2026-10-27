@@ -88,7 +88,7 @@ Create a clear real-time animation.
 - [x] Draw both rods
 - [x] Draw both masses
 - [x] Animate using Matplotlib
-- [ ] Display simulation time
+- [x] Display simulation time
 - [ ] Add a trace for the second mass
 - [ ] Add pause/reset controls
 

@@ -2,12 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import animation
 
-from energy import kinetic_energy, potential_energy, total_energy
+from energy import (
+    kinetic_energy, 
+    potential_energy, 
+    total_energy, 
+    initial_energy)
 from equations import angular_acceleration1, angular_acceleration2
 from pendulums import pendulum1, pendulum2
-
-# Initial Conditions
-initial_energy = total_energy(pendulum1.angle, pendulum2.angle, pendulum1.angular_velocity, pendulum2.angular_velocity)
 
 def main():
     # State vector
@@ -18,8 +19,8 @@ def main():
     state_mid3 = [0.0] * len(state)
     state_mid4 = [0.0] * len(state)
     
-    nsteps = 100000
-    h = 0.0001     # Integration time step (s)
+    nsteps = 1500000
+    h = 0.00001     # Integration time step (s)
     
     xresult1 = [0.0] * nsteps
     yresult1 = [0.0] * nsteps
@@ -86,7 +87,6 @@ def main():
     axis.set_aspect('equal')
 
     line, = axis.plot([], [], 'o-', lw = 3, ms = 10, color = "black")
-
     fps = 60
     skip = int(1 / (fps * h))
 
@@ -100,18 +100,18 @@ def main():
 
         x = [0, xresult1[index], xresult2[index]]
         y = [0, yresult1[index], yresult2[index]]
-
+        axis.set_title(
+        'Time {:.2f} s'.format(index * h), fontsize=20)
         line.set_data(x, y)
 
         return line,
 
-    anim = animation.FuncAnimation(fig, animate, init_func = init, frames = nsteps // skip, interval = 1000 / fps , blit = True)
+    anim = animation.FuncAnimation(fig, animate, init_func = init, frames = nsteps // skip, interval = 1000 / fps , blit = False)
+    # To save the animation as a video uncomment below
+    #anim.save('ThePendulum1.mp4', writer = 'ffmpeg', fps = 60))
     plt.show()
     
-    # To save the animation as a video uncomment below
-    # anim.save('ThePendulum1.mp4', writer = 'ffmpeg', fps = 60)
-    
-    # Plotting Energy
+    # Plotting the total, kinetic, and potential energy over time
     plt.figure
     
     time = np.arange(len(total_energy_list)) * h
@@ -137,13 +137,12 @@ def main():
     plt.title("Relative Energy error vs Time")
     plt.grid(True)
     plt.show()
-
-    # Outputs
-    print(f"Angle1 = {state[0]}\nAngular Velocity 1 = {state[1]}\nAngle2 = {state[2]}\nAngular Velocity 2 = {state[3]}")
     
+    # Calculate the maximum absolute relative energy error
     max_error = np.max(np.abs(relative_energy_error))
     print(f"Maximum relative energy error: {max_error:.6e}")
 
+    # Report the range of total energy throughout the simulation
     print(f"Initial energy: {total_energy_list[0]:.8e} J")
     print(f"Minimum energy: {np.min(total_energy_list):.8e} J")
     print(f"Maximum energy: {np.max(total_energy_list):.8e} J")

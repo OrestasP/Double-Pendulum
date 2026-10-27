@@ -25,3 +25,5 @@ def potential_energy(angle1, angle2):
 
 def total_energy(angle1, angle2, angular_velocity1, angular_velocity2):
     return kinetic_energy(angle1, angle2, angular_velocity1, angular_velocity2) + potential_energy(angle1, angle2)
+
+initial_energy = total_energy(pendulum1.angle, pendulum2.angle, pendulum1.angular_velocity, pendulum2.angular_velocity)

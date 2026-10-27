@@ -2,6 +2,10 @@
 
 A Python simulation of a double pendulum using the equations of motion derived from Lagrangian mechanics.
 
+## Simulation
+
+![Double pendulum simulation](media/ThePendulum.gif)
+
 ## Current Progress
 
 - [x] Project plan

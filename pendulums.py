@@ -15,5 +15,5 @@ class pendulum:
             f"Rod Length: {self.rod_length} m"
         )
 
-pendulum1 = pendulum(mass = 5, angle = np.pi / 2, angular_velocity = 1, length = 2)
-pendulum2 = pendulum(mass = 10 , angle = -np.pi / 2, angular_velocity = 2, length = 4)
+pendulum1 = pendulum(mass = 1, angle = np.pi * (2/3), angular_velocity = 0, length = 1)
+pendulum2 = pendulum(mass = 1 , angle = - np.pi / 18, angular_velocity = 0, length = 1)
