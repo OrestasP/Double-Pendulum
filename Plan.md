@@ -73,19 +73,8 @@ Verify that the simulation is numerically and physically credible.
 
 ## Timestep Experiment
 
-- [ ] Compare multiple timesteps
-- [ ]Measure how the energy error changes.
-
-## Physical Sanity Checks
-
-Test cases such as:
-
-- [ ] Small initial angles
-- [ ] Equal masses
-- [ ] Equal rod lengths
-- [ ] Zero initial angular velocities
-- [ ] One mass much larger than the other
-- [ ] Stable downward equilibrium
+- [x] Compare multiple timesteps
+- [x]Measure how the energy error changes.
 
 # Phase 4 — Visualization
 
