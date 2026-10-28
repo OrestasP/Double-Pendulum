@@ -1,26 +1,22 @@
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import animation
 
 from energy import (
     kinetic_energy, 
     potential_energy, 
     total_energy, 
     initial_energy)
-from equations import angular_acceleration1, angular_acceleration2
+from parameters import h, nsteps
 from pendulums import pendulum1, pendulum2
+from equations import angular_acceleration1, angular_acceleration2
 
-def main():
+def rk4_solve(angle1, angular_velocity1, angle2, angular_velocity2):
     # State vector
-    state = [pendulum1.angle, pendulum1.angular_velocity, pendulum2.angle, pendulum2.angular_velocity]
+    state = [angle1, angular_velocity1, angle2, angular_velocity2]
     
     # Temporary states used to evaluate the intermediate RK4 stages.
     state_mid2 = [0.0] * len(state)
     state_mid3 = [0.0] * len(state)
     state_mid4 = [0.0] * len(state)
-    
-    nsteps = 1500000
-    h = 0.00001     # Integration time step (s)
     
     xresult1 = [0.0] * nsteps
     yresult1 = [0.0] * nsteps
@@ -75,79 +71,13 @@ def main():
         if i % 1000 == 0:
             current_time = i * h
             print(f"Calculating t = {current_time:.2f} s")
-        
-
-
-    # Plotting / animating the double pendulum
-    fig = plt.figure()
-
-    limit = pendulum1.length + pendulum2.length
-    axis = plt.axes(xlim = (-limit, limit), ylim = (-limit, limit))
-
-    axis.set_aspect('equal')
-
-    line, = axis.plot([], [], 'o-', lw = 3, ms = 10, color = "black")
-    fps = 60
-    skip = int(1 / (fps * h))
-
-    def init():
-        line.set_data([], [])
-        return line,
-
-
-    def animate(frame):
-        index = frame * skip
-
-        x = [0, xresult1[index], xresult2[index]]
-        y = [0, yresult1[index], yresult2[index]]
-        axis.set_title(
-        'Time {:.2f} s'.format(index * h), fontsize=20)
-        line.set_data(x, y)
-
-        return line,
-
-    anim = animation.FuncAnimation(fig, animate, init_func = init, frames = nsteps // skip, interval = 1000 / fps , blit = False)
-    # To save the animation as a video uncomment below
-    #anim.save('ThePendulum1.mp4', writer = 'ffmpeg', fps = 60))
-    plt.show()
-    
-    # Plotting the total, kinetic, and potential energy over time
-    plt.figure
-    
-    time = np.arange(len(total_energy_list)) * h
-    
-    plt.plot(time, total_energy_list, label = "Total Energy", color = "green")
-    plt.plot(time, kinetic_energy_list, label = "Kinetic Energy", color = "blue")
-    plt.plot(time, potential_energy_list, label = "Potential Energy", color = "red")
-    
-    plt.xlabel("Time (s)")
-    plt.ylabel("Energy (J)")
-    plt.title("Energy vs Time")
-    plt.grid(True)
-    plt.legend()
-    plt.show()
-
-    # Plotting relative energy error
-    plt.figure()
-    
-    plt.plot(time, relative_energy_error, label = "Relative Energy Error", color = "purple")
-    
-    plt.xlabel("Time (s)")
-    plt.ylabel("Relative Energy Error")
-    plt.title("Relative Energy error vs Time")
-    plt.grid(True)
-    plt.show()
-    
-    # Calculate the maximum absolute relative energy error
-    max_error = np.max(np.abs(relative_energy_error))
-    print(f"Maximum relative energy error: {max_error:.6e}")
-
-    # Report the range of total energy throughout the simulation
-    print(f"Initial energy: {total_energy_list[0]:.8e} J")
-    print(f"Minimum energy: {np.min(total_energy_list):.8e} J")
-    print(f"Maximum energy: {np.max(total_energy_list):.8e} J")
-
-
-
-if __name__ == "__main__":
-    main()
+    return (
+        xresult1,
+        yresult1,
+        xresult2,
+        yresult2,
+        total_energy_list,
+        kinetic_energy_list,
+        potential_energy_list,
+        relative_energy_error
+    )

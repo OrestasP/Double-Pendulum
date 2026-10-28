@@ -73,8 +73,8 @@ Verify that the simulation is numerically and physically credible.
 
 ## Timestep Experiment
 
-- [x] Compare multiple timesteps
-- [x]Measure how the energy error changes.
+- [ ] Compare multiple timesteps
+- [ ]Measure how the energy error changes.
 
 # Phase 4 — Visualization
 

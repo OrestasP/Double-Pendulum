@@ -12,7 +12,7 @@ class pendulum:
             f"Mass: {self.mass} kg\n"
             f"Angle: {self.angle} rad\n"
             f"Angular Velocity: {self.angular_velocity} rad/s\n"
-            f"Rod Length: {self.rod_length} m"
+            f"Rod Length: {self.length} m"
         )
 
 pendulum1 = pendulum(mass = 1, angle = np.pi * (2/3), angular_velocity = 0, length = 1)
