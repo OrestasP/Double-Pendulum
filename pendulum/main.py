@@ -19,35 +19,63 @@ def main():
    
     # Plotting / animating the double pendulum
     fig = plt.figure()
-
-    limit = pendulum1.length + pendulum2.length
+    leeway = 0.1
+    limit = pendulum1.length + pendulum2.length + leeway # Keep pendulum within bounds
     axis = plt.axes(xlim = (-limit, limit), ylim = (-limit, limit))
 
     axis.set_aspect('equal')
 
-    line, = axis.plot([], [], 'o-', lw = 3, ms = 10, color = "black")
+    # Create the pendulums, the two mass bobs, and trajectory of second mass
+    line1, = axis.plot([], [], 'o-', lw = 3, ms = 6, color = "black")
+    line2, = axis.plot([], [], 'o', lw = 3, ms = 12, color = "red")
+    line3, = axis.plot([], [], 'o', lw = 3, ms = 12, color = "blue")
+    line4, = axis.plot([], [], '--', lw = 1, color = 'grey')
+    
     fps = 60
     skip = int(1 / (fps * h))
+    
+    dotted_x = []
+    dotted_y = []
 
     def init():
-        line.set_data([], [])
-        return line,
+        line1.set_data([], [])
+        line2.set_data([], [])
+        line3.set_data([], [])
+        line4.set_data([], [])
+        return line1,
 
 
     def animate(frame):
         index = frame * skip
+        # Clear the trajectory whenever the animation resets
+        if frame == 0:
+            dotted_x.clear()
+            dotted_y.clear()
 
-        x = [0, xresult1[index], xresult2[index]]
-        y = [0, yresult1[index], yresult2[index]]
+        x1 = [0, xresult1[index], xresult2[index]]
+        y1 = [0, yresult1[index], yresult2[index]]
+        
+        # Accumulate the second mass trajectory        
+        dotted_x.append(xresult2[index])
+        dotted_y.append(yresult2[index])
+        
+        # Display the current simulation time
         axis.set_title(
         'Time {:.2f} s'.format(index * h), fontsize=20)
-        line.set_data(x, y)
+        
+        line1.set_data(x1, y1)
+        line2.set_data([xresult1[index]], [yresult1[index]])
+        line3.set_data([xresult2[index]], [yresult2[index]])
+        line4.set_data(dotted_x, dotted_y)
 
-        return line,
+        return line1, line2, line3, line4
 
     anim = animation.FuncAnimation(fig, animate, init_func = init, frames = nsteps // skip, interval = 1000 / fps , blit = False)
+    
     # To save the animation as a video uncomment below
-    #anim.save('ThePendulum1.mp4', writer = 'ffmpeg', fps = 60)
+    # from matplotlib.animation import PillowWriter
+    # anim.save("ThePendulum.gif", writer=PillowWriter(fps=50))
+    
     plt.show()
     
     # Plotting the total, kinetic, and potential energy over time
@@ -63,7 +91,7 @@ def main():
     plt.ylabel("Energy (J)")
     plt.title("Energy vs Time")
     plt.grid(True)
-    plt.legend()
+    plt.legend(loc = 'upper right')
     plt.show()
 
     # Plotting relative energy error

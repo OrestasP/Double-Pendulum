@@ -89,7 +89,7 @@ Create a clear real-time animation.
 - [x] Draw both masses
 - [x] Animate using Matplotlib
 - [x] Display simulation time
-- [ ] Add a trace for the second mass
+- [x] Add a trace for the second mass
 - [ ] Add pause/reset controls
 
 ## Optional Additions
